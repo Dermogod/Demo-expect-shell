@@ -1,0 +1,31 @@
+#!/usr/local/bin/expect -f
+set timeout 2
+set now [clock seconds]
+set time [clock format $now -format {%c}]
+
+puts "\nstarting procedure at $time\n"
+
+#----for inputting passwd  from command line
+#set my_name [ lindex $argv 0 ]
+
+spawn mysql -u lev -p
+expect "*password*"
+
+#send -- "$my_name\r"
+send -- "123\r" 
+
+#expect "Welcome*\n*\n*\n*"
+expect "%"
+
+send -- "source DB_script.sql\r"
+
+expect "%"
+
+#----exiting session and waiting for a special eof sign
+send -- "exit\r"
+expect eof
+
+#----for manual mode
+#interact
+
+puts "\nfinished at $time\n"
